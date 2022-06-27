@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1656347033 source:d:\ladida\learning_cpp\transportation_method\main.cpp
+	<iostream>
+	<conio.h>
+
