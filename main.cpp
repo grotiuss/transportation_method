@@ -1,5 +1,7 @@
 #include <iostream>
 #include <conio.h>
+#include <iomanip>
+#include <string>
 
 using namespace std;
 
@@ -52,6 +54,7 @@ void show_table(table table_) {
         n_destination++;
     }
 
+    /*
     cout << "Factory : ";
     for(int i=0; i<n_source; i++) {
         cout << "\t" << table_.supply[i].capacity;
@@ -61,32 +64,40 @@ void show_table(table table_) {
     for(int i=0; i<n_destination; i++) {
         cout << "\t" << table_.demand[i].capacity;
     }
+    */
     cout << endl << endl;
 
-    for(int i=0; i<n_source; i++) {
-        for(int j=0; j<n_destination; j++){
-            cout << "|\t" << table_.shipment[i][j].price << "\t";
-        }
-        cout << "||\t" << table_.supply[i].capacity;
-        cout << endl;
-        for(int j=0; j<n_destination; j++){
-            cout << "|\t" << table_.shipment[i][j].amount << "\t";
-        }
-        cout << "||\t" << endl;
-        for(int j=0; j<n_destination; j++){
-            cout << "|\t" <<"----"<< "\t";
-        }
-        cout << "||\t----" << endl;
-    }
-    for(int j=0; j<n_destination; j++) {
-        cout << "|\t\t";
-    }
-    cout << "||" << endl;
-    for(int j=0; j<n_destination; j++) {
-        cout << "|\t" << table_.demand[j].capacity << "\t";
-    }
-    cout << "||\tZ = " << z(table_);
 
+    for (int i=0; i<n_source; i++) {
+        for (int j=0; j<n_destination; j++) {
+            cout  << setfill(' ') << left << setw(10) << "| " + to_string(table_.shipment[i][j].price);
+        }
+        cout << setfill(' ') << left << setw(10) << "|| " + to_string(table_.supply[i].capacity);
+        cout << endl;
+        for (int j=0; j<n_destination; j++) {
+            cout << setfill(' ') << left << setw(10) << "| " + to_string(table_.shipment[i][j].amount);
+        }
+        cout << setfill(' ') << left << setw(10) << "|| ";
+        cout << endl;
+        for (int j=0; j<(n_destination + 1); j++) {
+            if (n_source == (i+1)) {
+                cout << setfill('=') << left << setw(10) << "";
+            } else {
+                cout << setfill('-') << left << setw(10) << "";
+            }
+        }
+        cout << endl;
+    }
+    for (int j=0; j<n_destination; j++) {
+        cout << setfill(' ') << left << setw(10) << "| " + to_string(table_.demand[j].capacity);
+    }
+    cout << setfill(' ') << left << setw(10) << "|| Z = " + to_string(z(table_));
+    cout <<endl;
+
+    for (int j=0; j<(n_destination); j++) {
+        cout << setfill(' ') << left << setw(10) << "| ";
+    }
+    cout << setfill(' ') << left << setw(10) << "|| ";
 }
 
 table initial_table() {
