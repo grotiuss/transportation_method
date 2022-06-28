@@ -1,2 +1,2 @@
 # transportation_method
-Application of Transportation Method of Linear Programming
+Application of Transportation Method (Linear Programming)
