@@ -44,7 +44,7 @@ long int z(table table_) {
     return result;
 }
 
-void show_table(table table_) {
+void show_table(table table_, string table_name = "North West Corner") {
     int n_source = 0;
     int n_destination = 0;
     while (!table_.supply[n_source].isEmpty) {
@@ -65,9 +65,13 @@ void show_table(table table_) {
         cout << "\t" << table_.demand[i].capacity;
     }
     */
+
     cout << endl << endl;
-
-
+    cout << table_name <<endl;
+    for (int j=0; j<(n_destination + 1); j++) {
+        cout << setfill('=') << left << setw(10) << "";
+    }
+    cout << endl;
     for (int i=0; i<n_source; i++) {
         for (int j=0; j<n_destination; j++) {
             cout  << setfill(' ') << left << setw(10) << "| " + to_string(table_.shipment[i][j].price);
@@ -98,6 +102,10 @@ void show_table(table table_) {
         cout << setfill(' ') << left << setw(10) << "| ";
     }
     cout << setfill(' ') << left << setw(10) << "|| ";
+    cout << endl;
+    for (int j=0; j<(n_destination + 1); j++) {
+        cout << setfill('=') << left << setw(10) << "";
+    }
 }
 
 table initial_table() {
@@ -123,7 +131,6 @@ table initial_table() {
             result.shipment[i][j].isEmpty = false;
         }
     }
-    show_table(result);
     return result;
 }
 
@@ -131,5 +138,6 @@ int main()
 {
     table model;
     model = initial_table();
+    show_table(model);
     return 0;
 }
