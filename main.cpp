@@ -103,6 +103,25 @@ int compare_cell_position(cell cell_1, cell cell_2) {
     }
 }
 
+cell cell_arround(cell shipment_, table table_, int pos = 0) {
+    int x = shipment_.x;
+    int y = shipment_.y;
+    switch (pos) {
+        case 0 :
+            x--;
+            break;
+        case 1 :
+            x++;
+            break;
+        case 2 :
+            y--;
+            break;
+        default :
+            y++;
+    }
+    return table_.shipment[x][y];
+}
+
 long int z(table table_) {
     long int result = 0;
     int n_source = 0;
@@ -279,6 +298,13 @@ table lcm (table table_) {
 }
 
 //Iterations
+cell stepping_stone_find_(cell shipment_, table table_, int direction = 0, int index = 0) {
+    int n_source = count_storage(table_, 0);
+    int n_destinantion = count_storage(table_, 1);
+
+    
+}
+
 cell stepping_stone_find(cell shipment_, table table_, int direction = 0) {
     int result_i = shipment_.x;
     int result_j = shipment_.y;
@@ -342,93 +368,7 @@ cell stepping_stone_find(cell shipment_, table table_, int direction = 0) {
     }
 }
 
-
-
-// table stepping_stone_find_cycle(cell shipment_, table table_) {
-//     int n_source = count_storage(table_, 0);
-//     int n_destination = count_storage(table_, 1);
-//     int i_[n_source * n_destination];
-//     int j_[n_source * n_destination];
-
-
-
-//     return table_;
-// }
-
-cell stepping_stone_find_branches(cell shipment_, table table_, int prev_dir = 0, int select_branch = 0) {
-    switch (prev_dir) {
-        case 0 : // arah ke atas
-            switch (select_branch) {
-                case 0 :
-                    return stepping_stone_find(shipment_, table_, 2);
-                    break;
-                case 1 :
-                    return stepping_stone_find(shipment_, table_, 0);
-                    break;
-                default : //(case 2)
-                    return stepping_stone_find(shipment_, table_, 3);
-            }
-            break;
-        case 1 : // arah ke bawah
-            switch (select_branch) {
-                case 0 :
-                    return stepping_stone_find(shipment_, table_, 3);
-                    break;
-                case 1 :
-                    return stepping_stone_find(shipment_, table_, 1);
-                    break;
-                default : //(case 2)
-                    return stepping_stone_find(shipment_, table_, 2);
-            }
-            break;
-        case 2 :
-            switch (select_branch) {
-                case 0 :
-                    return stepping_stone_find(shipment_, table_, 1);
-                    break;
-                case 1 :
-                    return stepping_stone_find(shipment_, table_, 2);
-                    break;
-                default : //(case 2)
-                    return stepping_stone_find(shipment_, table_, 0);
-            }
-            break;
-        default : // (case 3)
-            switch (select_branch) {
-                case 0 :
-                    return stepping_stone_find(shipment_, table_, 0);
-                    break;
-                case 1 :
-                    return stepping_stone_find(shipment_, table_, 3);
-                    break;
-                default : //(case 2)
-                    return stepping_stone_find(shipment_, table_, 1);
-            }
-    }
-}
-
-bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table table_) {
-    bool result = false;
-    if (compare_cell(shipment_start, shipment_target)) { // awal pencarian... asekkk wkwkw
-        for (int i = 0; i < 3; i++) {
-            if (!stepping_stone_find(shipment_start, table_, i).isEmpty) {
-                if (compare_cell(stepping_stone_find(shipment_start, table_, i), shipment_target))
-                    return true;
-                else {
-                    for (int j = 0; j < 3; j++) {
-                        if (compare_cell(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target)) {
-                            return true;
-                        } else {
-                            return stepping_stone_find_cycle(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target, table_);
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    } else {
-
-    }
+cell stepping_stone_find_branches(cell shipment_, table table_, int index = -1) {
 
 }
 
