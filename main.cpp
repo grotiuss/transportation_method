@@ -71,6 +71,38 @@ bool balance_checking(table table_) {
         return false;
 }
 
+bool compare_cell(cell cell_1, cell cell_2) {
+    if (cell_1.isEmpty || cell_2.isEmpty) {
+        return false;
+    }
+    
+    if (cell_1.x == cell_2.x && cell_1.y == cell_2.y && cell_1.price == cell_2.price && cell_1.amount == cell_2.amount) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+int compare_cell_position(cell cell_1, cell cell_2) {
+    if (cell_1.x == cell_2.x && cell_1.y == cell_2.y) {
+        return -1;
+    } else if (cell_1.x == cell_2.x) { // kiri kanan
+        if (cell_1.y < cell_2.y) { // cell_1 di kiri cell_2
+            return 4; 
+        } else { // cell_1 di kanan cell_2
+            return 3;
+        }
+    } else if (cell_1.y == cell_2.y) { // atas bawah
+        if (cell_1.x < cell_2.x) { // cell_1 di atas cell_2
+            return 1;
+        } else { // cell_1 di bawah cell_2
+            return 0;
+        }
+    } else { // nyerong :D
+        return -1; // tidak bisa diperiksa
+    }
+}
+
 long int z(table table_) {
     long int result = 0;
     int n_source = 0;
@@ -377,15 +409,15 @@ cell stepping_stone_find_branches(cell shipment_, table table_, int prev_dir = 0
 
 bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table table_) {
     bool result = false;
-    if (shipment_start == shipment_target) { // awal pencarian... asekkk wkwkw
+    if (compare_cell(shipment_start, shipment_target)) { // awal pencarian... asekkk wkwkw
         for (int i = 0; i < 3; i++) {
             if (!stepping_stone_find(shipment_start, table_, i).isEmpty) {
-                if (stepping_stone_find(shipment_start, table_, i) == shipment_target)
+                if (compare_cell(stepping_stone_find(shipment_start, table_, i), shipment_target))
                     return true;
                 else {
                     for (int j = 0; j < 3; j++) {
-                        if (stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j) == shipment_target) {
-                            return true
+                        if (compare_cell(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target)) {
+                            return true;
                         } else {
                             return stepping_stone_find_cycle(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target, table_);
                         }
