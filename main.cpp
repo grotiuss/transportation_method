@@ -377,7 +377,7 @@ cell stepping_stone_find_branches(cell shipment_, table table_, int prev_dir = 0
 
 bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table table_) {
     bool result = false;
-    if (shipment_start == shipment_target) { // awal pencarian... asekkk wkwkw 
+    if (shipment_start == shipment_target) { // awal pencarian... asekkk wkwkw
         for (int i = 0; i < 3; i++) {
             if (!stepping_stone_find(shipment_start, table_, i).isEmpty) {
                 if (stepping_stone_find(shipment_start, table_, i) == shipment_target)
@@ -395,7 +395,7 @@ bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table 
         }
         return false;
     } else {
-        
+
     }
 
 }
