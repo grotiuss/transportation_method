@@ -294,7 +294,12 @@ cell stepping_stone_find_ (cell shipment_, table table_, int direction = 0, int 
             count  ++;
         }
     }
-    return branch[index];
+    
+    if (index >= count) {
+        return empty;
+    } else {
+        return branch[index];
+    }
 }
 
 cell stepping_stone_find(cell shipment_, table table_, int direction = 0) {
@@ -425,30 +430,30 @@ cell stepping_stone_find_branches(cell shipment_, table table_, int prev_dir = 0
     }
 }
 
-bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table table_) {
-    bool result = false;
-    if (shipment_start == shipment_target) { // awal pencarian... asekkk wkwkw 
-        for (int i = 0; i < 3; i++) {
-            if (!stepping_stone_find(shipment_start, table_, i).isEmpty) {
-                if (stepping_stone_find(shipment_start, table_, i) == shipment_target)
-                    return true;
-                else {
-                    for (int j = 0; j < 3; j++) {
-                        if (stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j) == shipment_target) {
-                            return true
-                        } else {
-                            return stepping_stone_find_cycle(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target, table_);
-                        }
-                    }
-                }
-            }
-        }
-        return false;
-    } else {
+// bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table table_) {
+//     bool result = false;
+//     if (shipment_start == shipment_target) { // awal pencarian... asekkk wkwkw 
+//         for (int i = 0; i < 3; i++) {
+//             if (!stepping_stone_find(shipment_start, table_, i).isEmpty) {
+//                 if (stepping_stone_find(shipment_start, table_, i) == shipment_target)
+//                     return true;
+//                 else {
+//                     for (int j = 0; j < 3; j++) {
+//                         if (stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j) == shipment_target) {
+//                             return true
+//                         } else {
+//                             return stepping_stone_find_cycle(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target, table_);
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//         return false;
+//     } else {
         
-    }
+//     }
 
-}
+// }
 
 table stepping_stone(table table_) {
     cout << endl;
@@ -470,14 +475,12 @@ table stepping_stone(table table_) {
         }
     }
 
-    cell result_ = stepping_stone_find(table_.shipment[2][0], table_, 0);
-    cout << result_.x << " " << result_.y << " " << result_.amount << endl;
-    result_ = stepping_stone_find(table_.shipment[2][0], table_, 1);
-    cout << result_.x << " " << result_.y << " " << result_.amount << endl;
-    result_ = stepping_stone_find(table_.shipment[2][0], table_, 2);
-    cout << result_.x << " " << result_.y << " " << result_.amount << endl;
-    result_ = stepping_stone_find(table_.shipment[2][0], table_, 3);
-    cout << result_.x << " " << result_.y << " " << result_.amount << endl;
+    cell result_;
+    for (int i = 0; i < 2; i++) {
+        result_ = stepping_stone_find_(table_.shipment[2][1], table_, 0, i);
+        cout << result_.x << " " << result_.y << " " << result_.amount << endl;
+    }
+
     return result;
     // show_table(result, "Stepping Stone");
     // show_table(result);
