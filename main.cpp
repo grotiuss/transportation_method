@@ -71,52 +71,33 @@ bool balance_checking(table table_) {
         return false;
 }
 
-bool compare_cell(cell cell_1, cell cell_2) {
-    if (cell_1.isEmpty || cell_2.isEmpty) {
-        return false;
-    }
-    
-    if (cell_1.x == cell_2.x && cell_1.y == cell_2.y && cell_1.price == cell_2.price && cell_1.amount == cell_2.amount) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-int compare_cell_position(cell cell_1, cell cell_2) {
-    if (cell_1.x == cell_2.x && cell_1.y == cell_2.y) {
-        return -1;
-    } else if (cell_1.x == cell_2.x) { // kiri kanan
-        if (cell_1.y < cell_2.y) { // cell_1 di kiri cell_2
-            return 4; 
-        } else { // cell_1 di kanan cell_2
-            return 3;
-        }
-    } else if (cell_1.y == cell_2.y) { // atas bawah
-        if (cell_1.x < cell_2.x) { // cell_1 di atas cell_2
-            return 1;
-        } else { // cell_1 di bawah cell_2
-            return 0;
-        }
-    } else { // nyerong :D
-        return -1; // tidak bisa diperiksa
-    }
-}
-
-cell cell_arround(cell shipment_, table table_, int pos = 0) {
+cell cell_arround(cell shipment_ ,table table_, int direction = 0) {
     int x = shipment_.x;
     int y = shipment_.y;
-    switch (pos) {
-        case 0 :
+
+    int n_source = count_storage(table_, 0);
+    int n_destination = count_storage(table_, 1);
+    cell empty;
+
+    switch (direction) {
+        case 0 : // atas
+            if (x == 0)
+                return empty; 
             x--;
             break;
-        case 1 :
+        case 1 : // bawah
+            if (x == n_source)
+                return empty;
             x++;
             break;
-        case 2 :
+        case 2 : // kiri
+            if (y == 0)
+                return empty;
             y--;
             break;
-        default :
+        default : // kanan
+            if (y == n_destination)
+                return empty;
             y++;
     }
     return table_.shipment[x][y];
@@ -298,11 +279,22 @@ table lcm (table table_) {
 }
 
 //Iterations
-cell stepping_stone_find_(cell shipment_, table table_, int direction = 0, int index = 0) {
+cell stepping_stone_find_ (cell shipment_, table table_, int direction = 0, int index = 0) {
     int n_source = count_storage(table_, 0);
-    int n_destinantion = count_storage(table_, 1);
+    int n_destination = count_storage(table_, 1);
 
-    
+    cell empty, branch_;
+    cell branch[min_max(n_source, n_destination, 1)];
+    int count = 0;
+    branch_ = shipment_;
+    while(!branch_.isEmpty) {
+        branch_ = cell_arround(branch_, table_, direction);
+        if(branch_.amount != 0 && branch_.isEmpty == false) {
+            branch[count] = branch_;
+            count  ++;
+        }
+    }
+    return branch[index];
 }
 
 cell stepping_stone_find(cell shipment_, table table_, int direction = 0) {
@@ -368,7 +360,93 @@ cell stepping_stone_find(cell shipment_, table table_, int direction = 0) {
     }
 }
 
-cell stepping_stone_find_branches(cell shipment_, table table_, int index = -1) {
+
+
+// table stepping_stone_find_cycle(cell shipment_, table table_) {
+//     int n_source = count_storage(table_, 0);
+//     int n_destination = count_storage(table_, 1);
+//     int i_[n_source * n_destination];
+//     int j_[n_source * n_destination];
+
+
+
+//     return table_;
+// }
+
+cell stepping_stone_find_branches(cell shipment_, table table_, int prev_dir = 0, int select_branch = 0) {
+    switch (prev_dir) {
+        case 0 : // arah ke atas
+            switch (select_branch) {
+                case 0 :
+                    return stepping_stone_find(shipment_, table_, 2);
+                    break;
+                case 1 :
+                    return stepping_stone_find(shipment_, table_, 0);
+                    break;
+                default : //(case 2)
+                    return stepping_stone_find(shipment_, table_, 3);
+            }
+            break;
+        case 1 : // arah ke bawah
+            switch (select_branch) {
+                case 0 :
+                    return stepping_stone_find(shipment_, table_, 3);
+                    break;
+                case 1 :
+                    return stepping_stone_find(shipment_, table_, 1);
+                    break;
+                default : //(case 2)
+                    return stepping_stone_find(shipment_, table_, 2);
+            }
+            break;
+        case 2 :
+            switch (select_branch) {
+                case 0 :
+                    return stepping_stone_find(shipment_, table_, 1);
+                    break;
+                case 1 :
+                    return stepping_stone_find(shipment_, table_, 2);
+                    break;
+                default : //(case 2)
+                    return stepping_stone_find(shipment_, table_, 0);
+            }
+            break;
+        default : // (case 3)
+            switch (select_branch) {
+                case 0 :
+                    return stepping_stone_find(shipment_, table_, 0);
+                    break;
+                case 1 :
+                    return stepping_stone_find(shipment_, table_, 3);
+                    break;
+                default : //(case 2)
+                    return stepping_stone_find(shipment_, table_, 1);
+            }
+    }
+}
+
+bool stepping_stone_find_cycle(cell shipment_start, cell shipment_target, table table_) {
+    bool result = false;
+    if (shipment_start == shipment_target) { // awal pencarian... asekkk wkwkw 
+        for (int i = 0; i < 3; i++) {
+            if (!stepping_stone_find(shipment_start, table_, i).isEmpty) {
+                if (stepping_stone_find(shipment_start, table_, i) == shipment_target)
+                    return true;
+                else {
+                    for (int j = 0; j < 3; j++) {
+                        if (stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j) == shipment_target) {
+                            return true
+                        } else {
+                            return stepping_stone_find_cycle(stepping_stone_find_branches(stepping_stone_find(shipment_start, table_, i), table_, i, j), shipment_target, table_);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    } else {
+        
+    }
 
 }
 
